@@ -38,12 +38,7 @@ Never soften a real problem to protect the user's feelings. The point of this sy
 
 ## Design Documents
 
-The project's specification and architecture source of truth live in `docs/`:
-
-- **`docs/jobos-design-document.md`** — High-level overview: what the project is, core principles, module list, key architecture decisions, and decision log.
-- **`docs/jobos-architecture.md`** — Detailed breakdown: module components, data flows, folder structure, cross-module dependencies, and agent instruction hierarchy.
-
-Read these when building new modules, making architectural decisions, or resolving any ambiguity about how the system is supposed to work.
+Design and architecture documentation is maintained locally in `docs/` and is not included in the public repository. These files are used during development and module building — they are not needed for running the system.
 
 ---
 

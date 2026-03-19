@@ -60,7 +60,6 @@ jobos/
 ├── agents/                ← agent instruction files per module
 ├── templates/             ← blank starter templates
 ├── scripts/               ← utility scripts (PDF generation, etc.)
-├── docs/                  ← design and architecture documentation
 ├── notifications/         ← optional: daily macOS digest notification
 └── opportunities/         ← one folder per job opportunity (gitignored)
 ```

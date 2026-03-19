@@ -11,186 +11,11 @@ If the source is context/cv.md, output goes to context/cv-<firstname>.pdf
 
 import sys
 import os
-import re
-import html
+import html as html_mod
 
-# ---------------------------------------------------------------------------
-# Markdown CV parser
-# ---------------------------------------------------------------------------
-
-def parse_cv_markdown(text):
-    """Parse a cv-variant.md (or cv.md) into structured data."""
-    data = {
-        "name": "",
-        "contact": {},  # location, email, phone, linkedin, website
-        "summary": "",
-        "experience": [],  # list of roles
-        "skills": [],  # list of {category, items}
-        "education": [],  # list of {degree, school, dates}
-    }
-
-    # Strip YAML-ish front matter / metadata block (lines starting with >)
-    lines = text.split("\n")
-
-    # Remove HTML comments (tailoring notes etc.)
-    text_clean = re.sub(r"<!--[\s\S]*?-->", "", text)
-    lines = text_clean.split("\n")
-
-    # Find sections by ## headings
-    sections = {}
-    current_section = None
-    current_lines = []
-
-    for line in lines:
-        m = re.match(r"^##\s+(.+)", line)
-        if m:
-            if current_section:
-                sections[current_section] = "\n".join(current_lines)
-            current_section = m.group(1).strip()
-            current_lines = []
-        elif current_section:
-            current_lines.append(line)
-
-    if current_section:
-        sections[current_section] = "\n".join(current_lines)
-
-    # --- Contact ---
-    if "Contact Information" in sections:
-        ci = sections["Contact Information"]
-        for line in ci.split("\n"):
-            line = line.strip()
-            m = re.match(r"\*\*Name:\*\*\s*(.+)", line)
-            if m:
-                data["name"] = m.group(1).strip()
-            m = re.match(r"\*\*Location:\*\*\s*(.+)", line)
-            if m:
-                data["contact"]["location"] = m.group(1).strip()
-            m = re.match(r"\*\*Email:\*\*\s*(.+)", line)
-            if m:
-                data["contact"]["email"] = m.group(1).strip()
-            m = re.match(r"\*\*Phone:\*\*\s*(.+)", line)
-            if m:
-                data["contact"]["phone"] = m.group(1).strip()
-            m = re.match(r"\*\*LinkedIn:\*\*\s*(.+)", line)
-            if m:
-                data["contact"]["linkedin"] = m.group(1).strip()
-            m = re.match(r"\*\*Website:\*\*\s*(.+)", line)
-            if m:
-                data["contact"]["website"] = m.group(1).strip()
-
-    # --- Summary ---
-    if "Professional Summary" in sections:
-        data["summary"] = sections["Professional Summary"].strip().strip("-").strip()
-
-    # --- Experience ---
-    if "Experience" in sections:
-        exp_text = sections["Experience"]
-        # Split by ### headings (company names)
-        role_blocks = re.split(r"(?=^### )", exp_text, flags=re.MULTILINE)
-        for block in role_blocks:
-            block = block.strip()
-            if not block.startswith("###"):
-                continue
-            block_lines = block.split("\n")
-            company = re.sub(r"^###\s+", "", block_lines[0]).strip()
-
-            # There may be multiple roles within one company block
-            # Each role starts with **Title** | dates
-            roles_in_block = []
-            i = 1
-            while i < len(block_lines):
-                line = block_lines[i].strip()
-                role_match = re.match(r"\*\*(.+?)\*\*\s*\|?\s*(.*)", line)
-                if role_match:
-                    title = role_match.group(1).strip()
-                    rest = role_match.group(2).strip()
-                    # Extract parenthetical note (e.g., "progressed from Technical PM")
-                    note = ""
-                    paren_match = re.search(r"\((.+?)\)", rest)
-                    if paren_match:
-                        note = paren_match.group(1)
-                        rest = rest[:paren_match.start()] + rest[paren_match.end():]
-                    # After removing the paren, extract dates from what remains
-                    # Strip leading pipes, whitespace, and stray markdown markers
-                    dates_clean = rest.strip().lstrip("|").strip().strip("*").strip()
-
-                    # Next line might be location
-                    location = ""
-                    i += 1
-                    if i < len(block_lines):
-                        loc_line = block_lines[i].strip()
-                        if loc_line and not loc_line.startswith("-") and not loc_line.startswith("*"):
-                            location = loc_line
-                            i += 1
-
-                    # Collect bullet points
-                    achievements = []
-                    while i < len(block_lines):
-                        bline = block_lines[i].strip()
-                        if bline.startswith("- "):
-                            # Strip markdown bold markers for cleaner PDF output
-                            bullet = bline[2:].strip()
-                            bullet = re.sub(r"\*\*(.+?)\*\*", r"\1", bullet)
-                            achievements.append(bullet)
-                            i += 1
-                        elif bline.startswith("---"):
-                            i += 1
-                            break
-                        elif bline == "":
-                            i += 1
-                        else:
-                            break
-
-                    roles_in_block.append({
-                        "title": title,
-                        "dates": dates_clean,
-                        "company": company,
-                        "location": location,
-                        "note": note,
-                        "achievements": achievements,
-                    })
-                else:
-                    i += 1
-
-            data["experience"].extend(roles_in_block)
-
-    # --- Skills ---
-    if "Skills" in sections:
-        sk_text = sections["Skills"]
-        for line in sk_text.split("\n"):
-            line = line.strip()
-            m = re.match(r"\*\*(.+?):\*\*\s*(.+)", line)
-            if m:
-                data["skills"].append({
-                    "category": m.group(1).strip(),
-                    "items": m.group(2).strip(),
-                })
-
-    # --- Education ---
-    if "Education" in sections:
-        edu_text = sections["Education"]
-        edu_blocks = re.split(r"(?=^### )", edu_text, flags=re.MULTILINE)
-        for block in edu_blocks:
-            block = block.strip()
-            if not block.startswith("###"):
-                continue
-            block_lines = block.split("\n")
-            school = re.sub(r"^###\s+", "", block_lines[0]).strip()
-            degree = ""
-            dates = ""
-            for eline in block_lines[1:]:
-                eline = eline.strip()
-                m = re.match(r"\*\*(.+?)\*\*\s*\|?\s*(.*)", eline)
-                if m:
-                    degree = m.group(1).strip()
-                    dates = m.group(2).strip()
-            data["education"].append({
-                "degree": degree,
-                "school": school,
-                "dates": dates,
-            })
-
-    return data
+# Shared parser
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from generate_cv_pdf_parser import parse_cv_markdown, determine_output_path
 
 
 # ---------------------------------------------------------------------------
@@ -198,7 +23,7 @@ def parse_cv_markdown(text):
 # ---------------------------------------------------------------------------
 
 def escape(text):
-    return html.escape(text)
+    return html_mod.escape(text)
 
 
 def build_contact_items(contact):
@@ -250,6 +75,27 @@ def build_experience_blocks(experience):
     return "\n\n".join(blocks)
 
 
+def build_personal_project_blocks(projects):
+    blocks = []
+    for proj in projects:
+        subtitle_html = ""
+        if proj.get("subtitle"):
+            subtitle_html = f'\n    <div class="job-company">{escape(proj["subtitle"])}</div>'
+
+        bullets = "\n".join(
+            f"      <li>{escape(a)}</li>" for a in proj["achievements"]
+        )
+
+        block = f"""  <div class="job">
+    <div class="job-title">{escape(proj['title'])}</div>{subtitle_html}
+    <ul>
+{bullets}
+    </ul>
+  </div>"""
+        blocks.append(block)
+    return "\n\n".join(blocks)
+
+
 def build_skills_blocks(skills):
     blocks = []
     for s in skills:
@@ -280,6 +126,7 @@ def populate_template(template_html, data):
     out = out.replace("{{name}}", escape(data["name"]))
     out = out.replace("{{contact_items}}", build_contact_items(data["contact"]))
     out = out.replace("{{summary}}", escape(data["summary"]))
+    out = out.replace("{{personal_project_blocks}}", build_personal_project_blocks(data.get("personal_project", [])))
     out = out.replace("{{experience_blocks}}", build_experience_blocks(data["experience"]))
     out = out.replace("{{skills_blocks}}", build_skills_blocks(data["skills"]))
     out = out.replace("{{education_blocks}}", build_education_blocks(data["education"]))
@@ -348,26 +195,6 @@ def generate_pdf(html_string, output_path):
             sys.exit(1)
     finally:
         os.unlink(tmp_path)
-
-
-# ---------------------------------------------------------------------------
-# Output path logic
-# ---------------------------------------------------------------------------
-
-def determine_output_path(source_path, name):
-    first_name = name.split()[0].lower() if name else "cv"
-    source_dir = os.path.dirname(source_path)
-    source_base = os.path.basename(source_dir)
-
-    if "opportunities" in source_path:
-        # opportunities/safetica-senior-pm/cv-variant.md -> cv-martin-safetica-senior-pm.pdf
-        company = source_base
-        filename = f"cv-{first_name}-{company}.pdf"
-        return os.path.join(source_dir, filename)
-    else:
-        # context/cv.md -> context/cv-martin.pdf
-        filename = f"cv-{first_name}.pdf"
-        return os.path.join(source_dir, filename)
 
 
 # ---------------------------------------------------------------------------

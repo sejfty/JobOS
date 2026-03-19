@@ -140,7 +140,7 @@ Write `Last researched: YYYY-MM-DD` in the file header.
 
 ### Rule 10 — Activity Logging
 
-After completing research, append to the opportunity's `activity-log.md`:
+After completing research, insert at the top of the opportunity's `activity-log.md` table (newest first):
 > | YYYY-MM-DD | Company research completed. [Brief summary of key findings — 1-2 sentences.] |
 
 For refreshes:

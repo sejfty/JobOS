@@ -7,16 +7,16 @@
 <style>
   @page {
     size: A4;
-    margin: 0;
+    margin: 42px 56px;
   }
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
     font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif;
     font-size: 9pt;
-    line-height: 1.42;
+    line-height: 1.5;
     color: #2d2d2d;
     background: #fff;
-    padding: 42px 48px;
+    padding: 0;
     max-width: 210mm;
     margin: 0 auto;
   }
@@ -59,7 +59,7 @@
   }
 
   /* Section */
-  .section { margin-bottom: 12px; }
+  .section { margin-bottom: 18px; }
   .section-title {
     font-size: 9pt;
     font-weight: 700;
@@ -107,9 +107,9 @@
   .job li {
     padding-left: 10px;
     position: relative;
-    margin-bottom: 2px;
+    margin-bottom: 3px;
     font-size: 8.5pt;
-    line-height: 1.4;
+    line-height: 1.45;
   }
   .job li::before {
     content: "▸";
@@ -157,8 +157,9 @@
 
   /* Print */
   @media print {
-    body { padding: 38px 44px; }
-    .job { break-inside: avoid; }
+    body { padding: 0; }
+    .job-title-line { break-inside: avoid; break-after: avoid; }
+    .job-company { break-after: avoid; }
     .summary { background: var(--highlight) !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
   }
 </style>
@@ -176,10 +177,21 @@
   {{summary}}
 </div>
 
+<div class="section" id="personal-project" style="display:none">
+  <div class="section-title">Personal Project (in progress)</div>
+  {{personal_project_blocks}}
+</div>
+
 <div class="section">
   <div class="section-title">Experience</div>
   {{experience_blocks}}
 </div>
+
+<script>
+  // Only show personal project section if it has content
+  var pp = document.getElementById('personal-project');
+  if (pp && pp.querySelector('.job')) { pp.style.display = ''; }
+</script>
 
 <div class="section">
   <div class="section-title">Skills</div>

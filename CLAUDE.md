@@ -319,10 +319,17 @@ All dates use ISO 8601: **YYYY-MM-DD**. No exceptions — activity logs, pipelin
 
 ### Activity Logging
 
-When any module performs work on a specific opportunity (e.g., CV tailored, cover letter drafted, feedback personas run, company research completed, homework started), it must append an entry to that opportunity's `activity-log.md` with the date and a descriptive summary of what was done. This ensures the activity log captures the full history regardless of which module did the work.
+When any module performs work on a specific opportunity (e.g., CV tailored, cover letter drafted, feedback personas run, company research completed, homework started), it must insert an entry at the top of that opportunity's `activity-log.md` table (immediately after the header row, newest first) with the date and a descriptive summary of what was done. This ensures the activity log captures the full history regardless of which module did the work.
 
 **Exception:** Work on the base `context/cv.md` is not opportunity-specific and should NOT be logged to any activity log.
 
 ### Pipeline Updates
 
 Whenever a new opportunity is created or any activity changes an opportunity's stage, `pipeline.md` must be updated to reflect the current state. Any module that triggers a stage change is responsible for updating `pipeline.md` — this is not limited to the planning advisor.
+
+### Newest-First Ordering
+
+All table-based files use newest-first ordering — new entries are inserted immediately after the header row. This applies to:
+- `activity-log.md` — most recent activity at the top
+- `pipeline.md` — most recently updated opportunity at the top
+- `todo.md` — most recently added task at the top

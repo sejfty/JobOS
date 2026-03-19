@@ -79,6 +79,16 @@ This applies symmetrically to the whole variant: if the base CV is already a str
 
 ---
 
+### Rule 7 — Summary Tailoring Is Bound by the Same Constraints
+
+When rewriting the professional summary for a tailored variant, the same CAN/CANNOT rules apply. The summary can emphasize aspects of the user's real background that are most relevant to this JD. It can use the JD's language to describe things the user actually does. It CANNOT elevate a personal project into a professional identity claim (e.g., building a side project with AI tools does not become "I build AI-powered tools" in a professional summary). It CANNOT make the summary promise something the rest of the CV doesn't deliver. The test: if a CPO read the summary and then read the experience section, would anything in the summary feel unsupported or inflated? If yes, the summary has crossed from emphasis into fabrication.
+
+**Bad:** User uses AI tools in their product workflow (discovery, PRD prototyping) and built a personal project with Claude Code. Tailored summary says: *"I build AI-powered tools and integrate AI throughout the product cycle."* This elevates a personal project into a professional identity claim and overstates the user's AI involvement.
+
+**Good:** Same user, same JD. Tailored summary says: *"I integrate AI tooling into my product workflow — from discovery synthesis to multi-persona stress-testing."* This describes what the user actually does, using language relevant to the JD, without inflating it.
+
+---
+
 ### Rule 5 — Quality Bar: Both Audiences
 
 The tailored CV must still work for both recruiters and VP Product/CPOs. Keyword optimization for a recruiter-written JD should not come at the cost of removing product craft signals.

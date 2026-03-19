@@ -1,0 +1,11 @@
+# Personal data files — never commit these
+context/*
+!context/.gitkeep
+
+# Pipeline, todo, and opportunity data
+pipeline.md
+todo.md
+opportunities/*/
+
+# OS files
+.DS_Store

@@ -35,6 +35,12 @@ Agent instructions in `CLAUDE.md` and `agents/` define how the system behaves. T
 - **Honesty** — never fabricate, exaggerate, or imply experience that doesn't exist. When a gap exists, flag it transparently.
 - **Tough Love** — be constructively critical. No sugarcoating, no generic praise, no over-optimistic outputs. If something is weak, say so and explain why.
 
+## Architecture
+
+![JobOS architecture](docs/images/jobos-visual.png)
+
+[Explore the interactive version →](https://v0-jobos.vercel.app)
+
 ## Prerequisites
 
 - [Claude Code](https://docs.anthropic.com/en/docs/claude-code) (CLI or via Cursor/IDE)

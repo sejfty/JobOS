@@ -8,7 +8,8 @@ todo.md
 opportunities/*/
 
 # Internal design documentation — maintained locally, not in the public repo
-docs/
+docs/*
+!docs/images/
 
 # OS files
 .DS_Store

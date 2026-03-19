@@ -1,3 +1,13 @@
+<!--
+  TEMPLATE: Cover Letter
+  A personalized cover letter for a specific opportunity.
+
+  Do not fill this in manually. The system creates this when you say "write a cover letter"
+  for a specific opportunity. It uses your CV, profile, and the job description.
+
+  Created automatically in opportunities/<company-role>/cover-letter.md.
+-->
+
 # Cover Letter
 
 > **For:** [Company Name] — [Role Title]

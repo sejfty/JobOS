@@ -149,7 +149,7 @@ One clean, professionally designed template. Single design — not multiple styl
 
 ## Required Deliverables
 
-### Setup & Onboarding Guide
+### Onboarding Guide (`ONBOARDING.md`)
 The project must ship with clear, step-by-step instructions for new users. A PM who clones the repo and opens it in Claude Code should know exactly what to do — which files to fill in first, in what order, what each template expects, and how to run their first workflow.
 
 This guide will be built inside the project during the build phase, not during design. It should cover: prerequisites, which context files to populate first, how to add a new opportunity, how to trigger each module's workflow, and what to expect as output.
@@ -207,3 +207,4 @@ An HTML-based visual representation of the architecture (generated from `jobos-a
 | 2026-03-18 | Per-section confidence levels (High/Medium/Low) | Every major section gets a confidence indicator with basis. Communicates data quality without hiding gaps. |
 | 2026-03-18 | 3-week staleness threshold with lightweight refresh | Any module reading company-research.md older than 3 weeks flags it. Refresh updates changed sections without full re-run. |
 | 2026-03-18 | Facts-first-opinion-second editorial approach | Each section: factual findings first, then editorial prefixed with "*Read:*". Keeps data and interpretation clearly separated. |
+| 2026-03-19 | SETUP.md renamed to ONBOARDING.md | "Onboarding" better communicates the purpose for new users; "setup" implies technical installation |

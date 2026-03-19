@@ -108,7 +108,7 @@ Each opportunity file follows the same structure. Fields marked *(required)* mus
 jobos/
 ├── CLAUDE.md                          # Project entry point — Claude Code reads this automatically
 ├── README.md                          # Project overview + setup instructions + principles
-├── SETUP.md                           # Getting started guide (built during build phase)
+├── ONBOARDING.md                      # Step-by-step guide for new users
 │
 ├── context/                           # Foundation layer — user's identity
 │   ├── profile.md                     # Professional identity and preferences
@@ -133,6 +133,9 @@ jobos/
 │   ├── cover-letter-template.md       # Cover letter structure
 │   ├── company-research-template.md   # Module 8: Company research output template
 │   └── cv-pdf-template.html           # HTML template for PDF generation
+│
+├── scripts/                         # Utility scripts
+│   └── generate-cv-pdf.py           # Markdown CV → HTML → PDF via headless Chromium
 │
 ├── pipeline.md                        # Module 2: Summary view of all opportunities (maintained by planning agent)
 ├── todo.md                            # Module 2: Pending action items (maintained by planning agent)
@@ -593,7 +596,7 @@ Module agents don't repeat principles, tone rules, or context file references �
 ### PDF Generation Pipeline
 Used by Module 3, potentially by Module 4:
 ```
-markdown content → HTML (using template) → PDF (via Claude Code)
+markdown content → HTML (using template) → PDF (via scripts/generate-cv-pdf.py, headless Chromium)
 ```
 Single template. Clean typography. Professional appearance.
 

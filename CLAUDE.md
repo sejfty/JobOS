@@ -1,3 +1,5 @@
+> **Note:** This file is read automatically by Claude Code at the start of every session. It's the AI's instruction set — you don't need to edit it.
+
 # JobOS — Project Instructions
 
 JobOS is a Claude Code project that helps product managers navigate a job search systematically. It provides capability modules — from goal setting and CV optimization through interview simulation and company intelligence — all grounded in the user's real, verified experience. Every session starts from this file, which contains all behavioral defaults shared across every module.
@@ -76,6 +78,9 @@ jobos/
 │   ├── activity-log-template.md
 │   ├── linkedin-profile-template.md
 │   └── company-research-template.md  ← template for Module 8 company research output
+│
+├── scripts/                      ← utility scripts (PDF generation, etc.)
+│   └── generate-cv-pdf.py        ← markdown CV → HTML → PDF pipeline
 │
 └── opportunities/                ← per-opportunity folders (gitignored)
     ├── <company-name>/           ← Exploring stage (no role yet)

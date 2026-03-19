@@ -1,3 +1,14 @@
+<!--
+  TEMPLATE: Company Research Report
+  Comprehensive company intelligence — business health, product analysis, employee sentiment,
+  and fit assessment against your target criteria.
+
+  Do not fill this in manually. The system creates this when you say "research this company"
+  for a specific opportunity. It uses web search and your target-roles.md to assess fit.
+
+  Created automatically in opportunities/<company-role>/company-research.md.
+-->
+
 # Company Research: {{COMPANY_NAME}}
 
 > **Last researched:** {{YYYY-MM-DD}}

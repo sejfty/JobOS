@@ -1,3 +1,13 @@
+<!--
+  TEMPLATE: CV Variant
+  A tailored version of your CV optimized for a specific role.
+
+  Do not fill this in manually. The system creates this when you say "tailor my CV for this role"
+  for a specific opportunity. It reads your base CV and the job description to produce a targeted version.
+
+  Created automatically in opportunities/<company-role>/cv-variant.md.
+-->
+
 # CV Variant: [Company] — [Role]
 
 > **Base CV version:** [Date of context/cv.md when this variant was created]

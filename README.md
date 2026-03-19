@@ -1,141 +1,78 @@
 # JobOS
 
-A Claude Code project that helps product managers navigate a job search systematically. Think of it as a PM operating system — but for finding your next role instead of building product.
+An AI-powered job search system built on [Claude Code](https://docs.anthropic.com/en/docs/claude-code). It manages your CV, tracks opportunities, researches companies, assesses how well you fit a role, and prepares you for interviews — all from markdown files and natural language commands.
 
----
+JobOS won't make you look better than you are. It won't fabricate experience, inflate achievements, or help you land a role you can't retain. What it will do is force you to think clearly about what you want, prepare thoroughly for what's ahead, and present your real experience in the strongest honest form. The system is deliberately strict — it pushes back when something is vague, flags gaps instead of hiding them, and tells you when a target role is a stretch.
 
-## What It Is
+This project is under active development. Some capabilities are fully built and tested, others are designed but not yet implemented. The status of each is marked honestly below.
 
-JobOS is a collection of markdown context files, agent instructions, and workflow templates stored in a GitHub repository and run inside Claude Code. You bring your CV, your goals, and your job opportunities. The system helps you tailor your application, prepare for interviews, track your pipeline, and research companies — all grounded in your actual experience, with direct and honest feedback.
+## What you can do with it
 
-### Who It's For
+✅ **"I need to tailor my CV for this role."** Paste a job description URL or text. The system analyzes the requirements, maps them against your actual experience, tailors your CV to emphasize what's genuinely relevant, and generates a print-ready PDF and an ATS-safe DOCX. It also tells you where you have gaps — and what to do about them.
 
-Product managers who are actively job searching and want a structured, AI-assisted system to work smarter — not a chatbot that tells them their CV is great.
+✅ **"Help me figure out what I'm actually looking for."** Before applying anywhere, the Goal Setting workflow walks you through target roles, industries, company size, must-haves, and deal-breakers. It challenges vague answers and pushes you to prioritize.
 
----
+✅ **"What should I focus on today?"** The Planning Advisor scans all your in-flight opportunities, checks what's progressed and what's stalled, and tells you exactly what to do next — in priority order. You just tell it what happened ("had a screening call with Acme, went well") and it handles the rest.
 
-## Core Principles
+✅ **"Research this company for me."** Before you apply or interview, get a comprehensive report: business health, product analysis, employee sentiment, and an honest assessment of how well the company matches your criteria.
 
-These two principles are the project's DNA. They run through every module and every output.
+🚧 **"Write a cover letter for this role."** Generates a specific, authentic cover letter grounded in your CV, the job description, and company context. No generic filler.
 
-### Honesty
+🚧 **"I have a take-home assignment due Friday."** Helps you structure your approach to case studies and homework tasks — based on what you actually know, not fabricated expertise.
 
-The system works exclusively with verified, real information provided by the user. It never fabricates, exaggerates, or implies experience, skills, or achievements that don't exist.
+🚧 **"I have an interview tomorrow."** Practice with AI personas that simulate a recruiter, VP Product, and hiring manager.
 
-When a gap is identified between what a role requires and what the user has, the system flags it transparently rather than papering over it. A tailored CV only reorders and rewords what's true — it never invents. A cover letter doesn't oversell. Interview prep doesn't coach bluffing.
+🚧 **"How did my last interview go?"** Analyze real interview transcripts to identify patterns and feed insights into future prep.
 
-### Tough Love
+## How it works
 
-All system outputs are constructively critical and direct. Better to struggle in preparation than fail in the real thing.
+JobOS is a Claude Code project — a GitHub repo containing markdown files, agent instructions, and templates. You interact with it through natural language in your terminal or IDE.
 
-Weak CV points are called out. If an interview answer would fall flat with a real VP Product, the system says so. If a target role is unrealistic given the user's experience, it flags it. No generic praise, no sugarcoating.
+The system is structured in three layers: a foundation layer (your professional profile, CV, and target criteria), an entry gate (how job opportunities get into the system), and a module layer (eight capabilities that read your context and produce outputs). Everything about a single opportunity — the job description, your tailored CV, cover letter, company research, activity history — lives in one folder.
 
----
+Agent instructions in `CLAUDE.md` and `agents/` define how the system behaves. Two principles are hardcoded into every agent:
 
-## How the System Works
+- **Honesty** — never fabricate, exaggerate, or imply experience that doesn't exist. When a gap exists, flag it transparently.
+- **Tough Love** — be constructively critical. No sugarcoating, no generic praise, no over-optimistic outputs. If something is weak, say so and explain why.
 
-JobOS is structured in three layers:
+## Prerequisites
 
-```
-┌─────────────────────────────────────────────────────┐
-│                   MODULE LAYER                      │
-│  M1  M2  M3  M4  M5  M6  M7  M8                     │
-├─────────────────────────────────────────────────────┤
-│                   ENTRY GATE                        │
-│           opportunity.md (per job)                  │
-├─────────────────────────────────────────────────────┤
-│                FOUNDATION LAYER                     │
-│  profile.md | cv.md | target-roles.md | CLAUDE.md   │
-└─────────────────────────────────────────────────────┘
-```
+- [Claude Code](https://docs.anthropic.com/en/docs/claude-code) (CLI or via Cursor/IDE)
+- A Claude Pro subscription ($20/month) or higher — the free tier does not include Claude Code access. Alternatively, you can use API credits via a Claude Console account.
+- Git and a GitHub account
+- Optional: an IDE with terminal support like [Cursor](https://cursor.com) — Claude Code works in any terminal, but an IDE makes file review and iteration easier
 
-**Foundation Layer** — Context files that represent the user's identity: their CV, professional profile, and target role criteria. `CLAUDE.md` is loaded automatically by Claude Code every session, so every module starts with full project context.
+## Getting started
 
-**Entry Gate** — Every opportunity enters through one mechanism with two paths. **JD-first:** the user provides a URL (or pastes JD text as fallback), and the system normalizes it into a full `opportunity.md` file (stage: Saved). **Company-first:** the user wants to track a company before a specific role exists — recruiter outreach, networking, speculative interest — and the system creates a minimal `opportunity.md` with just the company name and a context note (stage: Exploring). When a JD appears later, it flows into the existing folder. All downstream modules read from `opportunity.md` — modules that require a JD gracefully stop for Exploring-stage opportunities.
+See [ONBOARDING.md](ONBOARDING.md) for step-by-step instructions.
 
-**Module Layer** — Eight capability modules built incrementally. Each has its own agent instruction file in `agents/`. Modules are triggered by natural language — "tailor my CV for this role" or "I need a cover letter" — and Claude Code routes to the right agent.
+The short version: clone the repo, open it in Claude Code, and start talking. The system creates your context files automatically from templates when they're first needed — you just fill them in through conversation.
 
----
-
-## Modules
-
-| # | Module | Status | Description |
-|---|--------|--------|-------------|
-| 1 | Goal Setting | Designed | Define target roles, industries, must-haves, and deal-breakers before applying anywhere |
-| 2 | Pipeline & Planning | Designed | Track application stages (Exploring → Saved → ... → Offer) and get proactive, opinionated recommendations on what to do next |
-| 3 | CV Optimization | Designed | LinkedIn PDF → canonical CV → one-time review → per-opportunity tailoring → PDF + DOCX output. CVs are optimized to pass AI-powered ATS screening — structural formatting and keyword alignment are handled automatically during review and tailoring. Also generates LinkedIn-optimized profile content — different in tone, depth, and keyword strategy from the CV — for manual profile update. |
-| 4 | Cover Letter Writing | Designed | Generate a specific, authentic cover letter from your CV + JD + company context |
-| 5 | Homework Assignment Help | Designed | Support for take-home tasks and case studies, grounded in your actual knowledge |
-| 6 | Interview Simulation | TBD | Agents role-play as VP Product, recruiter, and hiring manager for realistic practice |
-| 7 | Interview Analysis & Feedback Loop | TBD | Analyze real interview transcripts → identify patterns → feed back into future prep |
-| 8 | Company Intelligence | Designed | Comprehensive company research — business health, product analysis, and employee sentiment in one report. Single trigger, single output. |
-| | *(Modules 9–10 merged into Module 8)* | | *Employee sentiment and product analysis are now sections within Module 8. Interview question generation will be part of Module 6.* |
-
-**Designed** = detailed design complete, ready to build.
-**TBD** = intent is clear, detailed design still needed. Flagged honestly rather than guessed at.
-
----
-
-## Getting Started
-
-See [SETUP.md](SETUP.md) for step-by-step setup instructions. *(Coming soon — will be written once the full workflow is validated.)*
-
-The short version: clone the repo, open it in Claude Code, and start a workflow. Claude Code will automatically create the context files from the templates in `templates/` the first time they're needed — you just fill them in.
-
-### Recommended Setup Order
-
-1. **`context/profile.md`** — Start here. Your professional identity, strengths, work style, and career narrative. This gives every downstream module a sense of who you are beyond your CV.
-2. **`context/target-roles.md`** — What you're looking for: role types, industries, company size, must-haves, deal-breakers. You can fill this in directly or use the Goal Setting workflow (Module 1) to work through it. This shapes how modules evaluate fit and prioritize advice.
-3. **Any module workflow** — Once your profile and targets are set, every module has the context it needs to give you its best output.
-
-You don't have to follow this order. If you jump straight to CV optimization or opportunity entry, the system will tell you which context files are missing and why they matter — then continue with whatever it has. Nothing blocks.
-
----
-
-## Repository Structure
+## Repository structure
 
 ```
 jobos/
-├── CLAUDE.md                     ← AI instruction file (auto-loaded by Claude Code)
-├── README.md                     ← this file
-│
-├── context/                      ← your personal data — gitignored, never committed
-│   ├── profile.md                ← your professional identity (auto-created from template)
-│   ├── cv.md                     ← your canonical CV (auto-created from template)
-│   └── target-roles.md           ← what you're looking for (auto-created from template)
-│
-├── templates/                    ← blank starter templates (committed to repo)
-│   ├── profile-template.md       ← starter for context/profile.md
-│   ├── cv-template.md            ← starter for context/cv.md
-│   ├── target-roles-template.md  ← starter for context/target-roles.md
-│   ├── opportunity-template.md
-│   ├── cv-variant-template.md
-│   ├── cover-letter-template.md
-│   └── company-research-template.md  ← template for Module 8 output
-│
-├── agents/                       ← agent instruction files (added as modules are built)
-├── notifications/                ← optional: daily macOS notification for pending tasks
-├── pipeline.md                   ← summary of all in-flight opportunities (gitignored)
-└── opportunities/                ← one folder per job application (gitignored)
+├── CLAUDE.md              ← AI instruction file (auto-loaded by Claude Code)
+├── README.md              ← this file
+├── ONBOARDING.md          ← step-by-step guide for new users
+├── LICENSE                ← MIT
+├── context/               ← your personal data (gitignored, never committed)
+├── agents/                ← agent instruction files per module
+├── templates/             ← blank starter templates
+├── scripts/               ← utility scripts (PDF generation, etc.)
+├── docs/                  ← design and architecture documentation
+├── notifications/         ← optional: daily macOS digest notification
+└── opportunities/         ← one folder per job opportunity (gitignored)
 ```
 
----
+## Future considerations
 
-## Daily Digest Notification
+These are directions being explored — not commitments. The system may evolve in these ways:
 
-An optional macOS notification that summarizes your pending tasks from `todo.md` and nudges you to run a planning session. Runs once daily at a time you choose — useful if you want a reminder to keep your search moving without opening the repo.
+**Proactive job discovery.** Currently, JobOS assumes you've already found an opportunity. A future layer could automatically monitor job boards and company career pages against your criteria, surface matching roles, and feed them into the pipeline for your review — so the system finds opportunities for you instead of waiting for you to find them.
 
-To set it up, run `./notifications/setup.sh` and enter your repo path and preferred time. It uses only built-in macOS tools (no dependencies). The system works fine without it.
+**Always-on assistant via OpenClaw.** JobOS is session-based — it's only active when you open Claude Code. Integration with [OpenClaw](https://openclaw.ai) (an open-source personal AI assistant) could enable always-on capabilities: proactive deadline alerts via WhatsApp or Telegram, context-aware quick responses to recruiter messages while on the go, and intelligent nudges when opportunities go stale — all without opening your IDE.
 
-See [`notifications/README.md`](notifications/README.md) for full details, including uninstall and troubleshooting.
+## License
 
----
-
-## Using This as a Template
-
-If you're cloning this for your own job search:
-
-1. Clone the repo and open it in Claude Code. Your personal files (`context/profile.md`, `context/cv.md`, `context/target-roles.md`) are gitignored — they stay on your machine, never in the repo.
-2. Claude Code will automatically create each context file from the corresponding template in `templates/` the first time a workflow needs it. Fill in your own information when prompted.
-3. Nothing in the system assumes anything about who you are — all context flows from the files you populate.
-4. The agent instructions in `agents/` will work for any PM, not just the original author.
+MIT — do whatever you want with it. See [LICENSE](LICENSE).

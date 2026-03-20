@@ -102,6 +102,38 @@ chmod +x setup.sh jobos-notify.sh
 
 It asks for your repo path and preferred notification time. Uses only built-in macOS tools. The system works fine without it. See [`notifications/README.md`](notifications/README.md) for details.
 
+## Optional: LinkedIn MCP for Enhanced Company Research
+
+JobOS can connect to your LinkedIn to pull richer data during company research — leadership profiles, PM team composition, and hiring patterns. This is optional. Without it, company research still works using web search, with reduced depth for LinkedIn-dependent sections.
+
+**MCP Server:** `stickerdaniel/linkedin-mcp-server` (https://github.com/stickerdaniel/linkedin-mcp-server)
+
+**Prerequisites:** `uv` must be installed. Then install the browser dependency:
+```bash
+uvx patchright install chromium
+```
+
+**Step 1 — Authenticate with LinkedIn:**
+```bash
+uvx linkedin-scraper-mcp --login
+```
+This opens a browser window. Log into LinkedIn manually — handle 2FA and captcha if prompted. This creates a persistent browser profile at `~/.linkedin-mcp/`.
+
+**Step 2 — Register with Claude Code:**
+```bash
+claude mcp add linkedin -- uvx linkedin-scraper-mcp
+```
+
+**Step 3 — Verify:**
+Start a Claude Code session and type `/mcp`. Confirm `linkedin` shows as connected.
+
+**Troubleshooting:**
+- Sessions expire periodically. Re-run `uvx linkedin-scraper-mcp --login` to re-authenticate.
+- LinkedIn may present captcha challenges. Solve manually in the browser window.
+- This uses browser-based scraping, not LinkedIn's official API. Works for personal low-volume use.
+
+---
+
 ## Recommended order vs. reality
 
 The steps above are the recommended order: profile → target roles → CV → CV review → opportunities → modules. This gives the system maximum context to work with from the start.

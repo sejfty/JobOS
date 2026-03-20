@@ -14,7 +14,7 @@ This project is under active development. Some capabilities are fully built and 
 
 ✅ **"What should I focus on today?"** The Planning Advisor scans all your in-flight opportunities, checks what's progressed and what's stalled, and tells you exactly what to do next — in priority order. You just tell it what happened ("had a screening call with Acme, went well") and it handles the rest.
 
-✅ **"Research this company for me."** Before you apply or interview, get a comprehensive report: business health, product analysis, employee sentiment, and an honest assessment of how well the company matches your criteria.
+✅ **"Research this company for me."** Before you apply or interview, get a comprehensive report: business health, product analysis, employee sentiment, and an honest assessment of how well the company matches your criteria. An optional LinkedIn deep dive adds leadership profiles, hiring pattern analysis, and PM team composition.
 
 🚧 **"Write a cover letter for this role."** Generates a specific, authentic cover letter grounded in your CV, the job description, and company context. No generic filler.
 

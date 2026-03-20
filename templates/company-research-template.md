@@ -40,6 +40,9 @@
 
 *Read:* <!-- Editorial interpretation — what do these facts mean for the user? Connect the dots. -->
 
+### Questions to Ask
+<!-- Suggested questions based on findings. Remove if no questions arise. -->
+
 **Confidence: {{High / Medium / Low}}** — <!-- Basis: what sources, how recent, how quantitative. -->
 
 ---
@@ -50,7 +53,23 @@
 
 *Read:* <!-- Editorial interpretation — product strengths, weaknesses, trajectory. What should the user know going into an interview? -->
 
+### Questions to Ask
+<!-- Suggested questions based on findings. Remove if no questions arise. -->
+
 **Confidence: {{High / Medium / Low}}** — <!-- Basis: what sources, how recent, review volume. -->
+
+---
+
+## Competitive Landscape Depth
+
+<!-- Factual findings: main competitors (2-4) with brief descriptions, company positioning (leader/challenger/niche/new entrant), differentiation (price, features, vertical focus, technology, go-to-market), defensibility of position, market consolidation signals, recent competitive moves (acquisitions, product launches, funding rounds). Cite sources. -->
+
+*Read:* <!-- Editorial interpretation — what the competitive position means for the user. PM challenges differ for a market leader vs. a challenger in a consolidating market. Flag implications for interview preparation. -->
+
+### Questions to Ask
+<!-- Suggested questions based on findings. Remove if no questions arise. -->
+
+**Confidence: {{High / Medium / Low}}** — <!-- Basis: what sources (analyst reports, comparison sites, competitor press), how recent, how complete. -->
 
 ---
 
@@ -60,7 +79,55 @@
 
 *Read:* <!-- Editorial interpretation — culture signals, red flags, things to ask about in interviews. -->
 
+### Questions to Ask
+<!-- Suggested questions based on findings. Remove if no questions arise. -->
+
 **Confidence: {{High / Medium / Low}}** — <!-- Basis: what sources, review count, recency. -->
+
+---
+
+## Leadership Deep Dive
+
+<!-- Populated by LinkedIn deep dive. Run "LinkedIn deep dive for [company]" to fill this section. -->
+
+<!-- For each key leader (CEO, CPO/VP Product, CTO at minimum): name, title, tenure, career background (2-3 sentences), public thought leadership if any. -->
+
+*Read:* <!-- What the leadership composition suggests about company culture and PM org expectations. -->
+
+### Questions to Ask
+<!-- Questions informed by leadership backgrounds. -->
+
+**Confidence: {{High / Medium / Low}}** — <!-- Basis: LinkedIn profiles, web search, how complete. -->
+
+---
+
+## Hiring Pattern Analysis
+
+<!-- Populated by LinkedIn deep dive. Run "LinkedIn deep dive for [company]" to fill this section. -->
+
+<!-- Current open PM roles (count, seniority, teams), hiring trajectory, red flags (same role posted multiple times, seniority imbalances). -->
+
+*Read:* <!-- What the hiring pattern suggests about PM org maturity and where the user might fit. -->
+
+### Questions to Ask
+<!-- Questions informed by hiring patterns. -->
+
+**Confidence: {{High / Medium / Low}}** — <!-- Basis: LinkedIn jobs data, careers page, how current. -->
+
+---
+
+## PM Team Analysis
+
+<!-- Populated by LinkedIn deep dive. Run "LinkedIn deep dive for [company]" to fill this section. -->
+
+<!-- Estimated PM headcount, seniority distribution, PM-to-engineer ratio estimate, average tenure, recent departures. -->
+
+*Read:* <!-- What the PM team structure suggests about PM influence, career growth, and team health. -->
+
+### Questions to Ask
+<!-- Questions informed by PM team findings. -->
+
+**Confidence: {{High / Medium / Low}}** — <!-- Basis: LinkedIn data completeness, sample size. -->
 
 ---
 
@@ -87,3 +154,7 @@
 | <!-- URL or source name --> | <!-- What data was found, or "no relevant data" --> | <!-- Publication/update date --> |
 
 <!-- Paragraph on research limitations: what couldn't be found, what data gaps exist, what the user should verify independently. -->
+
+### LinkedIn Sources
+<!-- Populated by LinkedIn deep dive. LinkedIn profiles consulted, search queries run, MCP vs fallback method used. -->
+

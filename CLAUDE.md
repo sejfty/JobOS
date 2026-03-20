@@ -209,8 +209,27 @@ When the user wants to:
 - **Research a company** ("research [company]", "tell me about [company]") → read `agents/company-research-agent.md`
 - **Get company intelligence** ("company intelligence for [company]", "what do we know about [company]") → read `agents/company-research-agent.md`
 - **Refresh existing research** ("refresh research for [company]") → read `agents/company-research-agent.md`
+- **Run LinkedIn deep dive** ("LinkedIn deep dive for [company]", "do the LinkedIn research for [company]", "run advanced LinkedIn analysis") → read `agents/company-research-agent.md` (the LinkedIn Deep Dive section)
 
-Module 8 produces a single comprehensive report covering business health, product analysis, and employee sentiment. One trigger, one output file (`company-research.md`).
+Module 8 produces a single comprehensive report covering business health, product analysis, and employee sentiment. One trigger, one output file (`company-research.md`). An optional LinkedIn deep dive adds Leadership Deep Dive, Hiring Pattern Analysis, and PM Team Analysis as a separate user-triggered pass.
+
+### LinkedIn MCP
+
+JobOS optionally uses the LinkedIn MCP server (`stickerdaniel/linkedin-mcp-server` via uvx) for enhanced company research. When available, it enables richer data in the LinkedIn deep dive workflow — full leadership profiles, PM team composition, and hiring pattern data from LinkedIn. When unavailable, the deep dive falls back to `site:linkedin.com` web searches with reduced depth.
+
+This is the first instance of the "detect tool, use if available, fall back if not" pattern — future tools (Tavily, Firecrawl) will follow the same approach.
+
+### LinkedIn Deep Dive Nudge
+
+After any company research is completed, suggest the LinkedIn deep dive based on MCP availability:
+
+**If LinkedIn MCP is detected as available:**
+> "LinkedIn MCP is connected. Want to run the LinkedIn deep dive for [company]? This adds leadership profiles, PM team analysis, and hiring pattern data to the research."
+
+**If LinkedIn MCP is NOT available:**
+> "For deeper research, the LinkedIn deep dive can add leadership profiles, PM team analysis, and hiring patterns. It works best with LinkedIn MCP configured — see ONBOARDING.md for setup. You can also run it without MCP using web search (reduced depth)."
+
+This is a suggestion, not a gate. Don't repeat it if the user declines.
 
 ### Company Research Staleness Check
 

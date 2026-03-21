@@ -72,7 +72,8 @@ jobos/
 │   ├── cover-letter-template.md
 │   ├── activity-log-template.md
 │   ├── linkedin-profile-template.md
-│   └── company-research-template.md  ← template for Module 8 company research output
+│   ├── company-research-template.md  ← template for Module 8 company research output
+│   └── interview-prep-template.md   ← template for Module 6 interview prep output
 │
 ├── scripts/                      ← utility scripts (PDF generation, etc.)
 │   └── generate-cv-pdf.py        ← markdown CV → HTML → PDF pipeline
@@ -87,7 +88,8 @@ jobos/
         ├── cv-variant.md         ← tailored CV for this role
         ├── cover-letter.md       ← cover letter (if written)
         ├── company-research.md   ← Module 8 output (if run)
-        └── notes.md              ← free-form notes and interview prep
+        ├── interviews/           ← Module 6: per-round interview prep files
+        └── notes.md              ← free-form notes
 ```
 
 ---
@@ -169,10 +171,14 @@ Module-specific behavior lives in `agents/`. Each agent file defines a specific 
 **Current agent files (Module 8 — Company Intelligence):**
 - `agents/company-research-agent.md` — comprehensive company intelligence report (business health, product analysis, employee sentiment)
 
+**Current agent files (Module 6 — Interview Preparation):**
+- `agents/interview-prep.md` — generates targeted interview questions and talking points per round
+
 **Planned agents (to be created during module builds):**
 - `agents/cover-letter-writer.md` — Module 4
 - `agents/homework-helper.md` — Module 5
-- Additional agents for Modules 6–7 (TBD)
+- `agents/interview-simulator.md` — Module 6, Part 2 (TBD)
+- Additional agents for Module 7 (TBD)
 
 Agent files stay small and focused. They do not repeat the principles, tone rules, or context file references from this file — CLAUDE.md already covers all of that and is loaded automatically.
 
@@ -238,6 +244,28 @@ When any module reads `company-research.md` and it's older than 3 weeks (based o
 > "Company research for [X] is [N] weeks old. Want to refresh?"
 
 This applies to any module that consumes company research (e.g., cover letter writing, homework help, interview prep) — not just Module 8 itself.
+
+---
+
+## Module 6: Interview Preparation (Part 1 — Prep Agent)
+
+When the user wants to:
+
+- **Prepare questions for an upcoming interview** → read `agents/interview-prep.md`
+- **Prep for a specific interview round** ("prep me for my interview with [name/role]") → read `agents/interview-prep.md`
+- **General interview preparation** ("I have an interview but don't know who with") → read `agents/interview-prep.md`
+
+Module 6 will eventually include an interview simulator agent (Part 2, TBD). The prep agent is independent and can be used without the simulator.
+
+### Interview Prep Output
+
+Each prep run creates a separate file in `opportunities/[company-role]/interviews/`. One file per round, named after the round context (e.g., `round2-skill-interview-sarah-chen.md` or `general-prep.md`). The subfolder is created automatically on first use.
+
+### Interview Prep Prerequisites
+
+The prep agent requires `company-research.md` to exist for the opportunity. Without company research, the agent can only generate generic questions — which defeats the purpose. If company research is missing, the agent blocks and directs the user to run Module 8 first.
+
+The company research staleness check applies here (3-week threshold).
 
 ---
 

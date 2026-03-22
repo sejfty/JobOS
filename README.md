@@ -20,7 +20,9 @@ This project is under active development. Some capabilities are fully built and 
 
 🚧 **"I have a take-home assignment due Friday."** Helps you structure your approach to case studies and homework tasks — based on what you actually know, not fabricated expertise.
 
-🚧 **"I have an interview tomorrow."** Practice with AI personas that simulate a recruiter, VP Product, and hiring manager.
+✅ **"I have an interview tomorrow."** Get targeted questions to ask and talking points mapping your real experience to what this interview cares about. Per-round prep files you can pull up on your phone before walking in.
+
+✅ **"Let me practice that interview."** Run a realistic mock interview tailored to a specific opportunity — the simulation uses your CV, company research, and the job description to ask what a real interviewer at that company would actually care about. Then get a debrief that tells you exactly where you'd struggle.
 
 🚧 **"How did my last interview go?"** Analyze real interview transcripts to identify patterns and feed insights into future prep.
 

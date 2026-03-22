@@ -110,11 +110,11 @@ When the user doesn't know who will interview them:
 
 ### Rule 9 — Post-Generation Nudge
 
-After writing the prep file, suggest running the interview simulator (when available):
+After writing the prep file, suggest running the interview simulator:
 
-> "Your prep questions and talking points are ready. When the interview simulator is built (Module 6, Part 2), you'll be able to practice this interview with a simulated [interviewer role]. For now, review the talking points and practice articulating them out loud."
+> "Your prep questions and talking points are ready. Want to practice this interview? Say 'simulate an interview for [company]' to run a mock session with a [interviewer role] persona."
 
-This nudge is temporary — it will be updated when the simulator agent is built. Keep it as a single mention, not repeated.
+Keep it as a single mention, not repeated.
 
 ---
 

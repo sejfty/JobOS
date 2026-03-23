@@ -11,5 +11,9 @@ opportunities/*/
 docs/*
 !docs/images/
 
+# Module 0: Job Scout
+scouting/scout-report.md
+scouting/scout-archive.md
+
 # OS files
 .DS_Store

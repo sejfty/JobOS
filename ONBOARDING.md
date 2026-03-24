@@ -132,6 +132,23 @@ Start a Claude Code session and type `/mcp`. Confirm `linkedin` shows as connect
 - LinkedIn may present captcha challenges. Solve manually in the browser window.
 - This uses browser-based scraping, not LinkedIn's official API. Works for personal low-volume use.
 
+## Optional: Job Scout (Module 0) — Automated Job Discovery
+
+Every module in JobOS assumes you already have a job posting to work with. Module 0 solves the step before that: finding relevant opportunities automatically so you don't have to manually scan job boards, career pages, and LinkedIn every day.
+
+An n8n workflow runs daily in the background on your machine. It fetches listings from job board APIs and RSS feeds you configure, scores each one against your target roles and professional profile using the Claude API, and writes a curated scout report to `scouting/scout-report.md`. You review the matches in Claude Code and promote interesting ones into your pipeline with a single command — the same Entry Gate flow used for any manually found opportunity.
+
+This is the only module that requires tooling beyond Claude Code:
+
+- **Docker Desktop** — runs n8n locally
+- **n8n** — the workflow automation platform (free, self-hosted)
+- **Anthropic API key** — for AI-powered scoring of listings against your profile (~$5/month at daily runs)
+- **Job board API key(s)** — the workflow ships with one sample source (Adzuna, UK listings) to demonstrate the full pipeline. You should add sources relevant to your search — more Adzuna countries, other job board APIs, RSS feeds, or company career pages
+
+Once Module 0 is running, the planning advisor (Module 2) automatically detects new scout reports and creates todo items to review them. Automated discovery stays connected to your daily workflow without extra effort.
+
+**Setup:** Follow the step-by-step guide in [`n8n/N8N-SETUP.md`](n8n/N8N-SETUP.md) for installation and configuration.
+
 ---
 
 ## Recommended order vs. reality

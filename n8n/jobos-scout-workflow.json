@@ -1,0 +1,432 @@
+{
+  "name": "JobOS Job Scout workflow",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        -112
+      ],
+      "id": "b17872c2-3e42-4144-93cf-785d51e8d539",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "fileSelector": "/data/scouting/scout-report.md",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1.1,
+      "position": [
+        208,
+        0
+      ],
+      "id": "ffda6a23-8631-47a4-856c-dd182cd75c01",
+      "name": "Read Scout Report",
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "const now = new Date();\nlet shouldRun = true;\n\ntry {\n  const binary = $input.first().binary;\n  if (binary) {\n    for (const key of Object.keys(binary)) {\n      const buf = await this.helpers.getBinaryDataBuffer(0, key);\n      const content = buf.toString('utf-8');\n      const dateMatch = content.match(/^## (\\d{4}-\\d{2}-\\d{2})/m);\n      if (dateMatch) {\n        const lastRunDate = new Date(dateMatch[1] + 'T12:00:00');\n        const hoursSince = (now - lastRunDate) / (1000 * 60 * 60);\n        if (hoursSince < 20) {\n          shouldRun = false;\n        }\n      }\n    }\n  }\n} catch (e) {\n  shouldRun = true;\n}\n\nreturn [{ json: { shouldRun, timestamp: now.toISOString() } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        416,
+        0
+      ],
+      "id": "48414ce1-1ea6-4e92-9d6a-76ea0becb16d",
+      "name": "Check Last Run"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "010be197-8518-4513-a696-91db1f96d3e1",
+              "leftValue": "={{ $json.shouldRun }}",
+              "rightValue": "true",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        656,
+        0
+      ],
+      "id": "206a991c-6a92-4156-9002-efd7d6096bcd",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "url": "https://api.adzuna.com/v1/api/jobs/gb/search/1",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "app_id",
+              "value": "YOUR_ADZUNA_APP_ID"
+            },
+            {
+              "name": "app_key",
+              "value": "YOUR_ADZUNA_API_KEY"
+            },
+            {
+              "name": "results_per_page",
+              "value": "20"
+            },
+            {
+              "name": "what",
+              "value": "product manager"
+            },
+            {
+              "name": "max_days_old",
+              "value": "2"
+            },
+            {
+              "name": "content-type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        912,
+        -528
+      ],
+      "id": "605184ef-680b-49a2-93ab-cf1c1140972f",
+      "name": "Fetch Adzuna DE"
+    },
+    {
+      "parameters": {
+        "jsCode": "const results = $input.first().json.results || [];\n\nreturn results.map(job => ({\n  json: {\n    id: job.id.toString(),\n    source: \"Adzuna\",\n    title: job.title,\n    company: job.company.display_name,\n    location: job.location.display_name,\n    url: job.redirect_url,\n    date_posted: job.created.split('T')[0],\n    description: job.description,\n    salary_min: job.salary_min || null,\n    salary_max: job.salary_max || null,\n    salary_currency: job.salary_min ? \"GBP\" : null\n  }\n}));"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1136,
+        -528
+      ],
+      "id": "0c8d7ae1-67eb-40d8-b011-226a9b490715",
+      "name": "Normalize Listings"
+    },
+    {
+      "parameters": {
+        "fileSelector": "/data/context/target-roles.md",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1.1,
+      "position": [
+        912,
+        -336
+      ],
+      "id": "efdef942-0f4f-4bd2-b49c-fbef7539d8e2",
+      "name": "Read Target Roles"
+    },
+    {
+      "parameters": {
+        "fileSelector": "/data/context/profile.md",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1.1,
+      "position": [
+        912,
+        -144
+      ],
+      "id": "9e2e47a6-762f-47e8-8570-6c36061d6449",
+      "name": "Read Profile"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        1296,
+        -256
+      ],
+      "id": "1cc77cc6-86df-41ae-8929-a5616e5936ab",
+      "name": "Merge Context"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        1504,
+        -400
+      ],
+      "id": "864c2a4f-52a3-4c10-bc71-57af75329b8b",
+      "name": "Merge All"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Get listings from Normalize Listings node\nconst listings = $('Normalize Listings').all().map(item => item.json);\n\n// Get context files - try different binary access patterns\nconst targetRolesItem = $('Read Target Roles').first();\nconst profileItem = $('Read Profile').first();\n\nlet targetRoles = '';\nlet profile = '';\n\n// Extract text content from binary data\ntry {\n  const trBinary = targetRolesItem.binary;\n  for (const key of Object.keys(trBinary)) {\n    const buf = await this.helpers.getBinaryDataBuffer(0, key, 0);\n    targetRoles = buf.toString('utf-8');\n  }\n} catch (e) {\n  targetRoles = 'ERROR: Could not read target-roles.md: ' + e.message;\n}\n\ntry {\n  const prBinary = profileItem.binary;\n  for (const key of Object.keys(prBinary)) {\n    const buf = await this.helpers.getBinaryDataBuffer(0, key, 0);\n    profile = buf.toString('utf-8');\n  }\n} catch (e) {\n  profile = 'ERROR: Could not read profile.md: ' + e.message;\n}\n\n// Build the listings text\nconst listingsText = listings.map((job, i) => \n  `### Listing ${i + 1}\\n` +\n  `Title: ${job.title}\\n` +\n  `Company: ${job.company}\\n` +\n  `Location: ${job.location}\\n` +\n  `URL: ${job.url}\\n` +\n  `Source: ${job.source}\\n` +\n  `Posted: ${job.date_posted}\\n` +\n  `Salary: ${job.salary_min && job.salary_max ? job.salary_min + '-' + job.salary_max + ' ' + (job.salary_currency || '') : 'Not stated'}\\n` +\n  `\\nJob Description:\\n${job.description}\\n`\n).join('\\n---\\n\\n');\n\nconst totalListings = listings.length;\n\nconst scoringPrompt = `You are a Job Scout for a product management job search system. Your job is to evaluate job listings against the user's target criteria and professional profile, then produce a structured scout report section.\n\n## TARGET CRITERIA\n\n${targetRoles}\n\n## PROFESSIONAL PROFILE\n\n${profile}\n\n## RAW LISTINGS (${totalListings} total)\n\n${listingsText}\n\n## YOUR TASK\n\nFor each listing, assess TWO dimensions independently:\n\nTARGET ALIGNMENT — how well does this match the user's stated preferences in target criteria? Consider industry, role type, company size, location, culture signals, and deal-breakers.\n\nPROFILE FIT — how credible is the user as a candidate based on their professional profile? Consider relevant experience, skills match, seniority alignment, and transferable strengths.\n\nUse these to assign tiers:\n\n**Strong Match** — High on both dimensions. What the user wants AND is well-qualified for.\n\n**Worth a Look — Aspirational** — Matches target criteria but the user's profile is a stretch. Flag specifically what experience or skills are missing and why it might still be worth pursuing.\n\n**Worth a Look — Experience Fit** — User's profile is strong for this role but it falls outside stated target criteria. Explain why the user's experience is relevant and what makes this interesting despite not being in their target scope.\n\n**Skip** — Low on both dimensions, OR hits a deal-breaker.\n\n## RULES\n\n- Be honest. A listing that requires 10 years of domain experience the user doesn't have is not a Strong Match, even if everything else aligns. It may be Aspirational — say so clearly.\n- Do not inflate tiers to seem helpful. Fewer Strong Matches with high accuracy is better than many Strong Matches that waste the user's time.\n- When a JD is ambiguous (vague requirements, unclear seniority), say so in the flags rather than guessing optimistically.\n- Deal-breakers from target criteria are absolute. If the user says \"no adtech,\" a perfect-looking adtech role is a Skip regardless of profile fit.\n- Look beyond job titles. A \"Product Owner\" JD that reads like a Senior PM role should be scored on its actual content. A \"Director of Product\" that's really a solo PM at a 5-person startup should be flagged.\n- Experience Fit listings are valuable. If the user's profile is a strong match for a role outside their target industries, surface it.\n- Transferable skills matter. Platform migration, team scaling, B2B SaaS growth — these apply across industries. Score profile fit based on what's transferable, not just on industry keyword matches.\n\n## OUTPUT FORMAT\n\nStart with a metadata line:\n> Sources: Adzuna | Found: ${totalListings} | Strong: [count] | Aspirational: [count] | Experience Fit: [count] | Skipped: [count]\n\nThen for each listing that is Strong Match or Worth a Look (either type), produce:\n\n**[Company] — [Job Title]**\nSource: [source] | [Location] | Posted: [date]\nURL: [url]\nMatch: [2-3 sentences explaining the match]\nFlags: [Any concerns or ambiguities. Omit this line if there are no flags.]\n\nFor skipped listings, produce only a summary count grouped by skip reason. Do not list individual skipped listings.\n\nProduce ONLY the report content. No preamble, no commentary, no markdown code fences.`;\n\nreturn [{\n  json: {\n    scoringPrompt,\n    totalListings,\n    timestamp: new Date().toISOString().split('T')[0]\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1712,
+        -400
+      ],
+      "id": "ae65b24f-2e98-419c-9579-a379e5f0e3a5",
+      "name": "Build Scoring Prompt"
+    },
+    {
+      "parameters": {
+        "jsCode": "const prompt = $input.first().json.scoringPrompt;\nconst timestamp = $input.first().json.timestamp;\nconst totalListings = $input.first().json.totalListings;\n\nconst response = await this.helpers.httpRequest({\n  method: 'POST',\n  url: 'https://api.anthropic.com/v1/messages',\n  headers: {\n    'x-api-key': 'YOUR_ANTHROPIC_API_KEY',\n    'anthropic-version': '2023-06-01',\n    'content-type': 'application/json'\n  },\n  body: {\n    model: 'claude-sonnet-4-20250514',\n    max_tokens: 4096,\n    messages: [\n      { role: 'user', content: prompt }\n    ]\n  },\n  json: true\n});\n\nconst reportContent = response.content[0].text;\n\nreturn [{\n  json: {\n    reportContent,\n    timestamp,\n    totalListings\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1920,
+        -400
+      ],
+      "id": "898f2cc2-780c-4607-87c5-cfb57febd595",
+      "name": "Call Claude API"
+    },
+    {
+      "parameters": {
+        "jsCode": "const reportContent = $input.first().json.reportContent;\nconst timestamp = $input.first().json.timestamp;\n\nconst newSection = `## ${timestamp}\\n\\n${reportContent}\\n\\n---\\n`;\n\n// Try to get existing report from the node we read at workflow start\nlet existingContent = '';\ntry {\n  const readNode = $('Read Scout Report').first();\n  if (readNode.binary) {\n    for (const key of Object.keys(readNode.binary)) {\n      const buf = await this.helpers.getBinaryDataBuffer(0, key, 0);\n      existingContent = buf.toString('utf-8');\n    }\n  }\n} catch (e) {\n  existingContent = '';\n}\n\nlet finalContent;\nif (existingContent && existingContent.startsWith('# Job Scout Report')) {\n  const titleEnd = existingContent.indexOf('\\n') + 1;\n  const title = existingContent.substring(0, titleEnd);\n  const rest = existingContent.substring(titleEnd);\n  finalContent = title + '\\n' + newSection + '\\n' + rest;\n} else {\n  finalContent = '# Job Scout Report\\n\\n' + newSection;\n}\n\nconst binaryData = await this.helpers.prepareBinaryData(\n  Buffer.from(finalContent, 'utf-8'),\n  'scout-report.md',\n  'text/markdown'\n);\n\nreturn [{\n  json: { success: true, timestamp },\n  binary: { data: binaryData }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2128,
+        -400
+      ],
+      "id": "e1cb9ae6-8f6c-4495-87bc-fedec613e5d5",
+      "name": "Write Scout Report"
+    },
+    {
+      "parameters": {
+        "operation": "write",
+        "fileName": "/data/scouting/scout-report.md",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1.1,
+      "position": [
+        2336,
+        -400
+      ],
+      "id": "804ee364-b8d1-43c2-9950-4788c301488f",
+      "name": "Save Report"
+    },
+    {
+      "parameters": {
+        "events": [
+          "init"
+        ]
+      },
+      "type": "n8n-nodes-base.n8nTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        112
+      ],
+      "id": "47fc5fae-82e6-4ea8-8e53-019ae75b0b46",
+      "name": "n8n Trigger"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Read Scout Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Scout Report": {
+      "main": [
+        [
+          {
+            "node": "Check Last Run",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Last Run": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Fetch Adzuna DE",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Read Target Roles",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Read Profile",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Adzuna DE": {
+      "main": [
+        [
+          {
+            "node": "Normalize Listings",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize Listings": {
+      "main": [
+        [
+          {
+            "node": "Merge All",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Target Roles": {
+      "main": [
+        [
+          {
+            "node": "Merge Context",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Profile": {
+      "main": [
+        [
+          {
+            "node": "Merge Context",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge Context": {
+      "main": [
+        [
+          {
+            "node": "Merge All",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge All": {
+      "main": [
+        [
+          {
+            "node": "Build Scoring Prompt",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Scoring Prompt": {
+      "main": [
+        [
+          {
+            "node": "Call Claude API",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call Claude API": {
+      "main": [
+        [
+          {
+            "node": "Write Scout Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Write Scout Report": {
+      "main": [
+        [
+          {
+            "node": "Save Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "n8n Trigger": {
+      "main": [
+        [
+          {
+            "node": "Read Scout Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "6ac42540-2b0b-44c6-9075-62f10733a866",
+  "meta": {
+    "instanceId": "9e29b7973b7ad439cf1d082e329c2b59782dee232afb33bd72fad1b657d0f19a"
+  },
+  "id": "Gb3PUQNMoteeSNjZ",
+  "tags": []
+}

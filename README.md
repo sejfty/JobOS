@@ -8,7 +8,7 @@ This project is under active development. Some capabilities are fully built and 
 
 ## What you can do with it
 
-🚧 **"Find me jobs that match what I'm looking for."** An automated workflow monitors job boards and company career pages daily, scores listings against your criteria and profile, and surfaces tiered matches in a scout report. You review and promote interesting ones into your pipeline with one command.
+✅ **"Find me jobs that match what I'm looking for."** An automated workflow monitors job boards and company career pages daily, scores listings against your criteria and profile, and surfaces tiered matches in a scout report. You review and promote interesting ones into your pipeline with one command.
 
 ✅ **"I need to tailor my CV for this role."** Paste a job description URL or text. The system analyzes the requirements, maps them against your actual experience, tailors your CV to emphasize what's genuinely relevant, and generates a print-ready PDF and an ATS-safe DOCX. It also tells you where you have gaps — and what to do about them.
 

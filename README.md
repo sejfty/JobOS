@@ -81,10 +81,6 @@ jobos/
 
 ## Future considerations
 
-These are directions being explored — not commitments. The system may evolve in these ways:
-
-**Proactive job discovery.** Module 0 (Job Scout) is designed and ready to build. An n8n workflow monitors job boards and company career pages against your criteria, scores matches using Claude API, and surfaces them in a scout report. See the architecture docs for full details.
-
 **Always-on assistant via OpenClaw.** JobOS is session-based — it's only active when you open Claude Code. Integration with [OpenClaw](https://openclaw.ai) (an open-source personal AI assistant) could enable always-on capabilities: proactive deadline alerts via WhatsApp or Telegram, context-aware quick responses to recruiter messages while on the go, and intelligent nudges when opportunities go stale — all without opening your IDE.
 
 ## License
